@@ -48,5 +48,9 @@ This is an educational project on data cleaning and preparation using SQL. The o
         SET martial_status = 'Unknown'
         WHERE martial_status ="";
 
+4. Update các ô tuổi bị bỏ trống hoặc có giá trị sai (>= 100) thành trung bình của cột tuổi
 
+        UPDATE club_member_info_cleaned 
+        SET age = ROUND((SELECT AVG(age) FROM club_member_info_cleaned WHERE age < 100))
+        WHERE age = "" OR age >= 100;
 
