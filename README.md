@@ -54,3 +54,13 @@ This is an educational project on data cleaning and preparation using SQL. The o
         SET age = ROUND((SELECT AVG(age) FROM club_member_info_cleaned WHERE age < 100))
         WHERE age = "" OR age >= 100;
 
+5. REMOVE các dòng bị duplicate
+   + Bước 1. Tìm các dòng bị duplicate dựa trên số lượng email trả về, nếu số lượng COUNT(email) > 1 là bị duplicate
+
+                SELECT email, COUNT(email) FROM club_member_info_cleaned
+                GROUP BY email
+                ORDER BY 2 DESC
+
+    + Bước 2
+  
+
