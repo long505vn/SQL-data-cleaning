@@ -54,13 +54,35 @@ This is an educational project on data cleaning and preparation using SQL. The o
         SET age = ROUND((SELECT AVG(age) FROM club_member_info_cleaned WHERE age < 100))
         WHERE age = "" OR age >= 100;
 
-5. REMOVE các dòng bị duplicate
-   + Bước 1. Tìm các dòng bị duplicate dựa trên số lượng email trả về, nếu số lượng COUNT(email) > 1 là bị duplicate
+## 4. XOÁ CÁC DÒNG BỊ DUPLICATE theo email (Mỗi email chỉ được tương ứng với 1 id) 
+1. Tạo bảng mới với các cột như bảng "club_member_info_cleaned" và thêm 1 cột id có thuộc tính autoincrement
 
-                SELECT email, COUNT(email) FROM club_member_info_cleaned
-                GROUP BY email
-                ORDER BY 2 DESC
+        CREATE TABLE club_member_info_cleaned_new (
+        	id INTEGER PRIMARY KEY AUTOINCREMENT,
+        	full_name VARCHAR(50),
+        	age INTEGER,
+        	martial_status VARCHAR(50),
+        	email VARCHAR(50),
+        	phone VARCHAR(50),
+        	full_address VARCHAR(50),
+        	job_title VARCHAR(50),
+        	membership_date VARCHAR(50)
+        );
 
-    + Bước 2
-  
+2. COPY dữ liệu bảng cũ sang bảng mới
+
+        INSERT INTO club_member_info_cleaned_new (full_name, age, martial_status, email, phone, full_address, job_title, membership_date)
+        SELECT full_name, age, martial_status, email, phone, full_address, job_title, membership_date
+        FROM club_member_info_cleaned;
+
+3. DELETE các dòng có giá trị email bị lặp lại
+
+        DELETE FROM club_member_info_cleaned_new 
+        WHERE id NOT IN
+        (SELECT MIN(id) AS min_id 
+        FROM club_member_info_cleaned_new
+        GROUP BY email);
+
+
+
 
