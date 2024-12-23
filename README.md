@@ -216,3 +216,13 @@ Electrical Equipment and Machinery
         FROM product_emissions
         GROUP BY industry_groups_id
 
+        SELECT 
+            industry_group_id,
+            SUM(CASE WHEN year = '2013' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2013,
+            SUM(CASE WHEN year = '2014' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2014,
+            SUM(CASE WHEN year = '2015' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2015,
+            SUM(CASE WHEN year = '2016' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2016,
+            SUM(CASE WHEN year = '2017' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2017
+        FROM product_emissions
+        GROUP BY industry_group_id;
+
