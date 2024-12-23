@@ -84,8 +84,8 @@ This is an educational project on data cleaning and preparation using SQL. The o
         GROUP BY email);
 
 
-PRACTICE 3.5
-## Q1.
+# PRACTICE 3.5 Project 2 - Carbon Emission Analysis
+## Q1. Which products contribute the most to carbon emissions?
 
 ```
     SELECT product_name, AVG(carbon_footprint_pcf) 
@@ -94,47 +94,14 @@ PRACTICE 3.5
     ORDER BY AVG(carbon_footprint_pcf) DESC
 ```
 
-=> Wind Turbine G128 5 Megawats
-
-## Q2.
+## Q2. What are the industry groups of these products?
 
 ```
     SELECT DISTINCT industry_group
     FROM industry_groups
 ```
 
-"Consumer Durables, Household and Personal Products"
-"Food, Beverage & Tobacco"
-"Forest and Paper Products - Forestry, Timber, Pulp and Paper, Rubber"
-"Mining - Iron, Aluminum, Other Metals"
-"Pharmaceuticals, Biotechnology & Life Sciences"
-"Textiles, Apparel, Footwear and Luxury Goods"
-Automobiles & Components
-Capital Goods
-Chemicals
-Commercial & Professional Services
-Consumer Durables & Apparel
-Containers & Packaging
-Electrical Equipment and Machinery
-Energy
-Food & Beverage Processing
-Food & Staples Retailing
-Gas Utilities
-Household & Personal Products
-Materials
-Media
-Retailing
-Semiconductors & Semiconductor Equipment
-Semiconductors & Semiconductors Equipment
-Software & Services
-Technology Hardware & Equipment
-Telecommunication Services
-Tires
-Tobacco
-Trading Companies & Distributors and Commercial Services & Supplies
-Utilities
-
-## Q3.
+## Q3. What are the industries with the highest contribution to carbon emissions?
 
 ```
     SELECT industry_group, AVG(carbon_footprint_pcf)
@@ -144,37 +111,17 @@ Utilities
     ORDER BY AVG(carbon_footprint_pcf) DESC
 ```
 
-=>
-industry\_group
-AVG(carbon\_footprint\_pcf)
-Electrical Equipment and Machinery
-891050.7273
+## Q4. What are the companies with the highest contribution to carbon emissions?
 
 ```
-    SELECT industry_group, SUM(carbon_footprint_pcf)
-    FROM product_emissions AS p
-    LEFT JOIN industry_groups AS i ON p.industry_group_id = i.id
-    GROUP BY industry_group
-    ORDER BY SUM(carbon_footprint_pcf) DESC
-```
-
-=> Electrical Equipment and Machinery
-9801558
-
-## Q4.
-
-```
-    SELECT company_name, SUM(carbon_footprint_pcf)
+    SELECT company_name, AVG(carbon_footprint_pcf)
     FROM product_emissions AS p
     LEFT JOIN companies AS c ON p.company_id = c.id
     GROUP BY company_name
-    ORDER BY SUM(carbon_footprint_pcf) DESC
+    ORDER BY AVG(carbon_footprint_pcf) DESC
 ```
 
-=> "Gamesa Corporación Tecnológica, S.A."
-9778464
-
-## Q5.
+## Q5. What are the countries with the highest contribution to carbon emissions?
 
 ```
     SELECT country_name, SUM(carbon_footprint_pcf)
@@ -184,7 +131,7 @@ Electrical Equipment and Machinery
     ORDER BY SUM(carbon_footprint_pcf) DESC
 ```
 
-## Q6.
+## Q6. What is the trend of carbon footprints (PCFs) over the years?
 
 ```
     SELECT year, SUM(carbon_footprint_pcf)
@@ -193,36 +140,22 @@ Electrical Equipment and Machinery
     ORDER BY year 
 ```
 
-## Q7.
+## Q7. Which industry groups has demonstrated the most notable decrease in carbon footprints (PCFs) over time?
 
         SELECT 
-            industry_group_id,
-            SUM(CASE WHEN year = '2013' THEN carbon_footprint_pcf END) AS Total_2013,
-            SUM(CASE WHEN year = '2014' THEN carbon_footprint_pcf END) AS Total_2014,
-            SUM(CASE WHEN year = '2015' THEN carbon_footprint_pcf END) AS Total_2015,
-            SUM(CASE WHEN year = '2016' THEN carbon_footprint_pcf END) AS Total_2016,
-            SUM(CASE WHEN year = '2017' THEN carbon_footprint_pcf END) AS Total_2017
-        FROM product_emissions
-        GROUP BY industry_group_id;
-        
-        SELECT industry_groups_id,
-        		CASE
-        		WHEN year = '2013' THEN SUM(carbon_footprint_pcf) AS Total_2013
-        		WHEN year = '2014' THEN SUM(carbon_footprint_pcf AS Total_2014
-        		WHEN year = '2015' THEN SUM(carbon_footprint_pcf) AS Total_2015,
-        		WHEN year = '2016' THEN SUM(carbon_footprint_pcf) AS Total_2016,
-        		WHEN year = '2017' THEN SUM(carbon_footprint_pcf) AS Total_2017
-        		END
-        FROM product_emissions
-        GROUP BY industry_groups_id
-
-        SELECT 
-            industry_group_id,
-            SUM(CASE WHEN year = '2013' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2013,
-            SUM(CASE WHEN year = '2014' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2014,
-            SUM(CASE WHEN year = '2015' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2015,
-            SUM(CASE WHEN year = '2016' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2016,
-            SUM(CASE WHEN year = '2017' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2017
-        FROM product_emissions
-        GROUP BY industry_group_id;
-
+            industry_group,
+            Total_2013,
+            Total_2017,
+            (Total_2017 - Total_2013) AS Thay_doi
+        FROM 
+        	(
+            SELECT 
+                industry_group_id,
+                SUM(CASE WHEN year = '2013' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2013,
+                SUM(CASE WHEN year = '2017' THEN carbon_footprint_pcf ELSE 0 END) AS Total_2017
+            FROM product_emissions
+            GROUP BY industry_group_id
+        	) AS sub
+        	
+        LEFT JOIN industry_groups AS i ON i.id = sub.industry_group_id
+        ORDER BY Thay_doi
