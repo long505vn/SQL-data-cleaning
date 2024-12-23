@@ -84,5 +84,135 @@ This is an educational project on data cleaning and preparation using SQL. The o
         GROUP BY email);
 
 
+PRACTICE 3.5
+## Q1.
 
+```
+    SELECT product_name, AVG(carbon_footprint_pcf) 
+    FROM product_emissions
+    GROUP BY product_name
+    ORDER BY AVG(carbon_footprint_pcf) DESC
+```
+
+=> Wind Turbine G128 5 Megawats
+
+## Q2.
+
+```
+    SELECT DISTINCT industry_group
+    FROM industry_groups
+```
+
+"Consumer Durables, Household and Personal Products"
+"Food, Beverage & Tobacco"
+"Forest and Paper Products - Forestry, Timber, Pulp and Paper, Rubber"
+"Mining - Iron, Aluminum, Other Metals"
+"Pharmaceuticals, Biotechnology & Life Sciences"
+"Textiles, Apparel, Footwear and Luxury Goods"
+Automobiles & Components
+Capital Goods
+Chemicals
+Commercial & Professional Services
+Consumer Durables & Apparel
+Containers & Packaging
+Electrical Equipment and Machinery
+Energy
+Food & Beverage Processing
+Food & Staples Retailing
+Gas Utilities
+Household & Personal Products
+Materials
+Media
+Retailing
+Semiconductors & Semiconductor Equipment
+Semiconductors & Semiconductors Equipment
+Software & Services
+Technology Hardware & Equipment
+Telecommunication Services
+Tires
+Tobacco
+Trading Companies & Distributors and Commercial Services & Supplies
+Utilities
+
+## Q3.
+
+```
+    SELECT industry_group, AVG(carbon_footprint_pcf)
+    FROM product_emissions AS p
+    LEFT JOIN industry_groups AS i ON p.industry_group_id = i.id
+    GROUP BY industry_group
+    ORDER BY AVG(carbon_footprint_pcf) DESC
+```
+
+=>
+industry\_group
+AVG(carbon\_footprint\_pcf)
+Electrical Equipment and Machinery
+891050.7273
+
+```
+    SELECT industry_group, SUM(carbon_footprint_pcf)
+    FROM product_emissions AS p
+    LEFT JOIN industry_groups AS i ON p.industry_group_id = i.id
+    GROUP BY industry_group
+    ORDER BY SUM(carbon_footprint_pcf) DESC
+```
+
+=> Electrical Equipment and Machinery
+9801558
+
+## Q4.
+
+```
+    SELECT company_name, SUM(carbon_footprint_pcf)
+    FROM product_emissions AS p
+    LEFT JOIN companies AS c ON p.company_id = c.id
+    GROUP BY company_name
+    ORDER BY SUM(carbon_footprint_pcf) DESC
+```
+
+=> "Gamesa Corporación Tecnológica, S.A."
+9778464
+
+## Q5.
+
+```
+    SELECT country_name, SUM(carbon_footprint_pcf)
+    FROM product_emissions AS p
+    LEFT JOIN countries AS c ON p.country_id = c.id
+    GROUP BY country_name
+    ORDER BY SUM(carbon_footprint_pcf) DESC
+```
+
+## Q6.
+
+```
+    SELECT year, SUM(carbon_footprint_pcf)
+    FROM product_emissions AS p
+    GROUP BY year
+    ORDER BY year 
+```
+
+## Q7.
+
+        SELECT 
+            industry_group_id,
+            SUM(CASE WHEN year = '2013' THEN carbon_footprint_pcf END) AS Total_2013,
+            SUM(CASE WHEN year = '2014' THEN carbon_footprint_pcf END) AS Total_2014,
+            SUM(CASE WHEN year = '2015' THEN carbon_footprint_pcf END) AS Total_2015,
+            SUM(CASE WHEN year = '2016' THEN carbon_footprint_pcf END) AS Total_2016,
+            SUM(CASE WHEN year = '2017' THEN carbon_footprint_pcf END) AS Total_2017
+        FROM product_emissions
+        GROUP BY industry_group_id;
+        
+        SELECT industry_groups_id,
+        		CASE
+        		WHEN year = '2013' THEN SUM(carbon_footprint_pcf) AS Total_2013
+        		WHEN year = '2014' THEN SUM(carbon_footprint_pcf AS Total_2014
+        		WHEN year = '2015' THEN SUM(carbon_footprint_pcf) AS Total_2015,
+        		WHEN year = '2016' THEN SUM(carbon_footprint_pcf) AS Total_2016,
+        		WHEN year = '2017' THEN SUM(carbon_footprint_pcf) AS Total_2017
+        		END
+        FROM product_emissions
+        GROUP BY industry_groups_id
 
